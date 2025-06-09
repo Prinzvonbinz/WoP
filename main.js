@@ -69,7 +69,6 @@ function startGame() {
 
 function nextTurn() {
   document.getElementById("taskText").textContent = "";
-  document.getElementById("confirmSection").style.display = "none";
 
   let nextPlayer;
   do {
@@ -90,11 +89,6 @@ function choose(type) {
   }
 
   document.getElementById("taskText").textContent = task;
-  document.getElementById("confirmSection").style.display = "block";
-}
-
-function confirmTask() {
-  document.getElementById("confirmSection").style.display = "none";
 }
 
 function openCustomTasks() {
