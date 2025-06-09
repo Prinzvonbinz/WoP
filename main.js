@@ -1,7 +1,6 @@
 let players = [];
 let currentIndex = -1;
 let lastPlayer = null;
-let scores = {};
 let partyMode = false;
 let customTasks = {
   truth: [],
@@ -32,18 +31,27 @@ function addPlayer() {
   const name = nameInput.value.trim();
   if (name && !players.includes(name)) {
     players.push(name);
-    scores[name] = 0;
     updatePlayerList();
     nameInput.value = "";
   }
 }
 
+function removePlayer(index) {
+  players.splice(index, 1);
+  updatePlayerList();
+}
+
 function updatePlayerList() {
   const list = document.getElementById("playerList");
   list.innerHTML = "";
-  players.forEach(p => {
+  players.forEach((p, i) => {
     const li = document.createElement("li");
     li.textContent = p;
+    const btn = document.createElement("button");
+    btn.textContent = "❌";
+    btn.className = "remove-btn";
+    btn.onclick = () => removePlayer(i);
+    li.appendChild(btn);
     list.appendChild(li);
   });
 }
@@ -76,7 +84,7 @@ function choose(type) {
   const allTasks = (type === 'truth' ? truths : dares).concat(customTasks[type]);
   let task = allTasks[Math.floor(Math.random() * allTasks.length)];
 
-  if (partyMode && Math.random() < 0.2 && groupTasks.length > 0) {
+  if (partyMode && Math.random() < 0.2 && (groupTasks.length + customTasks.group.length) > 0) {
     const group = groupTasks.concat(customTasks.group);
     task = "[GRUPPENAUFGABE] " + group[Math.floor(Math.random() * group.length)];
   }
@@ -85,21 +93,8 @@ function choose(type) {
   document.getElementById("confirmSection").style.display = "block";
 }
 
-function confirmTask(success) {
-  const player = lastPlayer;
-  if (success) {
-    scores[player]++;
-  }
-  updateScoreDisplay();
+function confirmTask() {
   document.getElementById("confirmSection").style.display = "none";
-}
-
-function updateScoreDisplay() {
-  let scoreText = "Punkte:\n";
-  for (let p of players) {
-    scoreText += `${p}: ${scores[p]} | `;
-  }
-  document.getElementById("scoreInfo").textContent = scoreText;
 }
 
 function openCustomTasks() {
@@ -124,6 +119,12 @@ function addCustomTask() {
   }
 }
 
+function removeCustomTask(type, index) {
+  customTasks[type].splice(index, 1);
+  saveCustomTasks();
+  loadCustomTasks();
+}
+
 function loadCustomTasks() {
   const saved = localStorage.getItem("wop_custom_tasks");
   if (saved) {
@@ -132,9 +133,14 @@ function loadCustomTasks() {
   const list = document.getElementById("customList");
   list.innerHTML = "";
   for (let type in customTasks) {
-    customTasks[type].forEach(task => {
+    customTasks[type].forEach((task, index) => {
       const li = document.createElement("li");
       li.textContent = `[${type}] ${task}`;
+      const btn = document.createElement("button");
+      btn.textContent = "❌";
+      btn.className = "remove-btn";
+      btn.onclick = () => removeCustomTask(type, index);
+      li.appendChild(btn);
       list.appendChild(li);
     });
   }
@@ -144,5 +150,4 @@ function saveCustomTasks() {
   localStorage.setItem("wop_custom_tasks", JSON.stringify(customTasks));
 }
 
-// Beim Start laden
 window.onload = loadCustomTasks;
