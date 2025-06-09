@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WoP – Wahrheit oder Pflicht</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container" id="mainMenu">
+    <h1>Wahrheit oder Pflicht</h1>
+    <input type="text" id="nameInput" placeholder="Spielername eingeben" />
+    <button onclick="addPlayer()">Hinzufügen</button>
+    <ul id="playerList"></ul>
+    <button onclick="startGame()" class="start-btn">Spiel starten</button>
+    <label><input type="checkbox" id="partyMode" /> Party-Modus aktivieren</label>
+    <button onclick="openCustomTasks()">Eigene Aufgaben</button>
+  </div>
+
+  <div class="container" id="gameScreen" style="display:none;">
+    <h2 id="currentPlayer"></h2>
+    <div id="taskSection">
+      <button onclick="choose('truth')">Wahrheit</button>
+      <button onclick="choose('dare')">Pflicht</button>
+    </div>
+    <p id="taskText"></p>
+    <div id="confirmSection" style="display:none;">
+      <button onclick="confirmTask(true)">✅ Erledigt</button>
+      <button onclick="confirmTask(false)">❌ Nicht erledigt</button>
+    </div>
+    <p id="scoreInfo"></p>
+    <button onclick="nextTurn()">Nächster</button>
+  </div>
+
+  <div class="container" id="customTasks" style="display:none;">
+    <h2>Eigene Aufgaben</h2>
+    <select id="customType">
+      <option value="truth">Wahrheit</option>
+      <option value="dare">Pflicht</option>
+      <option value="group">Gruppenaufgabe</option>
+    </select>
+    <input type="text" id="customInput" placeholder="Aufgabe eingeben" />
+    <button onclick="addCustomTask()">Hinzufügen</button>
+    <ul id="customList"></ul>
+    <button onclick="closeCustomTasks()">Zurück</button>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
